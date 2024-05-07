@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -37,11 +38,17 @@ public class MyRestController {
 
     @DeleteMapping("employees/{id}")
     public String deleteEmployee(@PathVariable("id") int id) {
-        int res = employeeService.deleteEmployee(id);
-        if (res != 0) {
+        Employee employee = employeeService.getEmployee(id);
+        if (employee != null) {
+            employeeService.deleteEmployee(id);
             return "Employee with id: " + id + " was deleted";
         }
         return "";
+    }
+
+    @GetMapping("employees/name/{name}")
+    public List<Employee> findAllEmployee(@PathVariable String name) {
+        return employeeService.findAllByName(name);
     }
 
 }
